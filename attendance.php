@@ -66,7 +66,7 @@
                                     // Fetch attendance data
                                     $sql = mysqli_query($connect, 
                                         "SELECT b.Name, b.NIM, a.Date, a.Time 
-                                         FROM attendance a, student b 
+                                         FROM scan_rfid a, student b 
                                          WHERE a.IDCard = b.IDCard AND a.Date = '$date'");
                                     
                                     $no = 0;
@@ -86,7 +86,7 @@
                                     // Menghitung jumlah attendance pada hari ini
                                     $count_sql = mysqli_query($connect, 
                                         "SELECT COUNT(*) AS total_attender 
-                                        FROM attendance a, student b 
+                                        FROM scan_rfid a, student b 
                                         WHERE a.IDCard = b.IDCard AND a.Date = '$date'");
                                     $count_data = mysqli_fetch_assoc($count_sql);
                                     $total_attender = $count_data['total_attender'];

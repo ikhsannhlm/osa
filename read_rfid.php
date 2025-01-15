@@ -36,13 +36,13 @@ if ($datarfid) {
             $time = date('H:i:s');
 
             // Check if the card has already been registered today
-            $search_attend = mysqli_query($connect, "select * from attendance where IDCard='$idcard' and Date='$date'");
+            $search_attend = mysqli_query($connect, "select * from scan_rfid where IDCard='$idcard' and Date='$date'");
 
             // Count the data
             $sum_attend = mysqli_num_rows($search_attend);
             if ($sum_attend == 0) {
                 echo "<h1>Welcome, $name :)</h1>";
-                $insert_query = "INSERT INTO attendance (IDCard, Date, Time) VALUES ('$idcard', '$date', '$time')";
+                $insert_query = "INSERT INTO scan_rfid (IDCard, Date, Time) VALUES ('$idcard', '$date', '$time')";
                 if (mysqli_query($connect, $insert_query)) {
                     echo "<h2>Attendance recorded successfully!</h2>";
                 } else {

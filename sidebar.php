@@ -29,7 +29,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a href="pages/forms/general.html" class="nav-link <?php echo (basename($_SERVER['PHP_SELF']) == 'general.html') ? 'active' : ''; ?>">
+          <a href="scan_yolo.php" class="nav-link <?php echo (basename($_SERVER['PHP_SELF']) == 'scan_yolo.php') ? 'active' : ''; ?>">
             <i class="nav-icon far fa-image"></i>
             <p>Scan YOLO</p>
           </a>
