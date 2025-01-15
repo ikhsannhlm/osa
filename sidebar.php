@@ -37,7 +37,7 @@
         <li class="nav-item">
           <a href="attendance.php" class="nav-link <?php echo (basename($_SERVER['PHP_SELF']) == 'attendance.php') ? 'active' : ''; ?>">
             <i class="nav-icon fas fa-file"></i>
-            <p>Attendance R&V</p>
+            <p>Attendance R & V</p>
           </a>
         </li>
         <li class="nav-item">

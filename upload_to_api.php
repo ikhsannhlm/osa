@@ -1,5 +1,6 @@
 <?php
-include 'connect.php';  // Pastikan Anda memiliki file untuk menghubungkan ke database
+include 'connect.php'; // Koneksi ke database
+include 'validation.php'; // Tambahkan validasi ke dalam aplikasi
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_FILES['image'])) {
@@ -15,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $filePath = $image['tmp_name'];
 
                 // URL API Anda
-                $apiUrl = "http://127.0.0.1:8000/predict";  // Ganti dengan URL API Anda
+                $apiUrl = "http://127.0.0.1:8000/predict"; // Ganti dengan URL API Anda
 
                 // Kirim file ke API
                 $curl = curl_init();
@@ -48,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         }
                     }
 
-                    // Perbaiki penulisan header: 'total-people-detected'
+                    // Ambil total_people_detected dari header API
                     $totalPeopleDetected = $headersArray['total-people-detected'] ?? 0;
 
                     // Cek apakah folder 'uploads' ada, jika tidak, buat folder
@@ -62,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     file_put_contents($outputImage, $body);
 
                     // Menyimpan data ke database
-                    date_default_timezone_set('Asia/Jakarta');  // Set timezone
+                    date_default_timezone_set('Asia/Jakarta'); // Set timezone
                     $currentDate = date('Y-m-d');
                     $currentTime = date('H:i:s');
 
@@ -72,8 +73,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $result = mysqli_query($connect, $sql);
 
                     if ($result) {
-                        // Jika berhasil, redirect dengan parameter untuk menampilkan gambar
-                        header("Location: scan_yolo.php?status=success&image=$outputImage&total_people_detected=$totalPeopleDetected");
+                        // Panggil fungsi validasi setelah data berhasil disimpan ke tabel scan_yolo
+                        $validationResult = validate_scans($currentDate, $currentTime, $totalPeopleDetected, $connect);
+                        if ($validationResult['status'] == 'success') {
+                            $validationStatus = $validationResult['validation_status'];
+
+                            // Redirect dengan informasi validasi
+                            header("Location: scan_yolo.php?status=success&image=$outputImage&total_people_detected=$totalPeopleDetected&validation_status=$validationStatus");
+                        } else {
+                            echo "Validation Error: " . $validationResult['message'];
+                        }
                     } else {
                         echo "Error: " . mysqli_error($connect);
                     }
@@ -81,7 +90,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 } else {
                     echo json_encode(['status' => 'error', 'message' => 'Failed to process image']);
                 }
-
             } else {
                 echo json_encode(['status' => 'error', 'message' => 'Only JPG, JPEG, PNG files are allowed']);
             }
