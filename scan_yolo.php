@@ -92,20 +92,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['save'])) {
 
                                 echo "<h4>Total People Detected: $totalPeopleDetected</h4>";
                                 echo "<img src='$imagePath' class='img-fluid' alt='YOLO Detection Result'>";
-                                ?>
-                                <form action="scan_yolo.php" method="POST" class="mt-3">
-                                    <input type="hidden" name="date" value="<?php echo $currentDate; ?>">
-                                    <input type="hidden" name="time" value="<?php echo $currentTime; ?>">
-                                    <input type="hidden" name="total_people_detected" value="<?php echo $totalPeopleDetected; ?>">
-                                    <button type="submit" name="save" class="btn btn-success">Save</button>
-                                </form>
-                                <?php
+                            ?>
+                            
+                            <!-- Form for editing total people detected -->
+                            <form action="scan_yolo.php" method="POST" class="mt-3">
+                                <input type="hidden" name="date" value="<?php echo $currentDate; ?>">
+                                <input type="hidden" name="time" value="<?php echo $currentTime; ?>">
+                                
+                                <!-- Editable input for total people detected -->
+                                <div class="form-group">
+                                    <label for="total_people_detected">Total People Detected</label>
+                                    <input type="number" name="total_people_detected" id="total_people_detected" class="form-control" value="<?php echo $totalPeopleDetected; ?>" required>
+                                </div>
+
+                                <button type="submit" name="save" class="btn btn-success">Save</button>
+                            </form>
+
+                            <?php
                             } else {
                                 echo "<p>No scan result available. Please upload an image.</p>";
                             }
                             ?>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
