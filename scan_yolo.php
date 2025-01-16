@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['save'])) {
         $validationResult = validate_scans($date, $time, $totalPeopleDetected, $connect);
         $validationStatus = $validationResult['validation_status'];
 
-        echo "<script>alert('Data saved successfully. Validation status: $validationStatus');</script>";
+        echo "<script>alert('Data saved successfully.');</script>";
     } else {
         echo "<script>alert('Error: " . mysqli_error($connect) . "');</script>";
     }
