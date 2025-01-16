@@ -42,18 +42,18 @@
                     <!-- Card for Attendance Recap -->
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Recapitulation RFID Attender</h3>
+                            <h3 class="card-title">Scan RFID Recapitulation</h3>
                         </div>
                         <!-- Card Body -->
                         <div class="card-body">
                             <table id="attendanceTable" class="table table-bordered table-striped">
                                 <thead>
                                     <tr style="background-color: grey; color: white; text-align: center;">
-                                        <th>No</th>
                                         <th>NIM</th>
                                         <th>Name</th>
                                         <th>Date</th>
                                         <th>Time</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -65,20 +65,27 @@
 
                                     // Fetch attendance data
                                     $sql = mysqli_query($connect, 
-                                        "SELECT b.Name, b.NIM, a.Date, a.Time 
+                                        "SELECT b.Name, b.NIM, a.ID, a.Date, a.Time 
                                          FROM scan_rfid a, student b 
-                                         WHERE a.IDCard = b.IDCard AND a.Date = '$date'");
+                                         WHERE a.IDCard = b.IDCard");
                                     
                                     $no = 0;
                                     while ($data = mysqli_fetch_array($sql)) {
                                         $no++;
                                     ?>
                                     <tr style="text-align: center;">
-                                        <td> <?php echo $no; ?> </td>
                                         <td> <?php echo $data['NIM']; ?> </td>
                                         <td> <?php echo $data['Name']; ?> </td>
                                         <td> <?php echo $data['Date']; ?> </td>
                                         <td> <?php echo $data['Time']; ?> </td>
+                                        <td style='text-align: center;'>
+                                            <a class='btn btn-info btn-sm' href='edit_scan_rfid.php?id=<?php echo $data['ID']; ?>'>
+                                                <i class='fas fa-pencil-alt'></i> Edit
+                                            </a>
+                                            <a class='btn btn-danger btn-sm' href='delete_scan_rfid.php?id=<?php echo $data['ID']; ?>'>
+                                                <i class='fas fa-trash'></i> Delete
+                                            </a>
+                                        </td>
                                     </tr>
                                     <?php } ?>
                                 </tbody>
@@ -87,15 +94,15 @@
                                     $count_sql = mysqli_query($connect, 
                                         "SELECT COUNT(*) AS total_attender 
                                         FROM scan_rfid a, student b 
-                                        WHERE a.IDCard = b.IDCard AND a.Date = '$date'");
+                                        WHERE a.IDCard = b.IDCard");
                                     $count_data = mysqli_fetch_assoc($count_sql);
                                     $total_attender = $count_data['total_attender'];
                                 ?>
                                 <!-- Tampilan Table -->
                                 <tfoot>
                                     <tr style="background-color: grey; color: white; text-align: center;">
-                                        <th>Total</th>
-                                        <th colspan="4" style="text-align: left;">
+                                        <th colspan="4" style="text-align: left;">Total</th>
+                                        <th>
                                             <?php echo $total_attender; ?>
                                         </th>
                                     </tr>
@@ -116,10 +123,10 @@
                             <table id="scanYoloTable" class="table table-bordered table-striped">
                                 <thead>
                                     <tr style="background-color: grey; color: white; text-align: center;">
-                                        <th>No</th>
                                         <th>Date</th>
                                         <th>Time</th>
                                         <th>Total People Detected</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -134,17 +141,24 @@
                                         $no++;
                                     ?>
                                     <tr style="text-align: center;">
-                                        <td> <?php echo $no; ?> </td>
                                         <td> <?php echo $data['date']; ?> </td>
                                         <td> <?php echo $data['time']; ?> </td>
                                         <td> <?php echo $data['total_people_detected']; ?> </td>
+                                        <td style='text-align: center;'>
+                                            <a class='btn btn-info btn-sm' href='edit_scan_yolo.php?id=<?php echo $data['id']; ?>'>
+                                                <i class='fas fa-pencil-alt'></i> Edit
+                                            </a>
+                                            <a class='btn btn-danger btn-sm' href='delete_scan_yolo.php?id=<?php echo $data['id']; ?>'>
+                                                <i class='fas fa-trash'></i> Delete
+                                            </a>
+                                            </td>
                                     </tr>
                                     <?php } ?>
                                 </tbody>
                                 <tfoot>
                                     <tr style="background-color: grey; color: white; text-align: center;">
-                                        <th>Total</th>
-                                        <th colspan="3" style="text-align: left;">
+                                        <th colspan="3" style="text-align: left;">Total</th>
+                                        <th>
                                             <?php
                                             // Count the total number of scans
                                             $count_sql = mysqli_query($connect, "SELECT COUNT(*) AS total_scans FROM scan_yolo");
@@ -184,7 +198,7 @@
 
                                     // Fetch data from validation table
                                     $sql = mysqli_query($connect, 
-                                        "SELECT validation_date AS date, validation_time AS time, 
+                                        "SELECT id, validation_date AS date, validation_time AS time, 
                                                 total_rfid_scan, total_yolo_scan, validation_status 
                                         FROM validation");
 
@@ -201,20 +215,25 @@
                                                 <?php echo ucfirst($data['validation_status']); ?>
                                             </span>
                                         </td>
-                                        <td>
-                                            <a href="edit_validation.php?date=<?php echo $data['date']; ?>&time=<?php echo $data['time']; ?>" class="btn btn-warning">Edit</a>
+                                        <td style='text-align: center;'>
+                                            <a class='btn btn-info btn-sm' href='edit_validation.php?id=<?php echo $data['id']; ?>'>
+                                                <i class='fas fa-pencil-alt'></i> Edit
+                                            </a>
+                                            <a class='btn btn-danger btn-sm' href='delete_validation.php?id=<?php echo $data['id']; ?>'>
+                                                <i class='fas fa-trash'></i> Delete
+                                            </a>
                                         </td>
                                     </tr>
                                     <?php } ?>
                                 </tbody>
                                 <tfoot>
                                     <tr style="background-color: grey; color: white; text-align: center;">
-                                        <th colspan="5">Total Entries</th>
+                                        <th colspan="5" style="text-align: left;">Total</th>
                                         <th>
                                             <?php 
                                             $totalEntries = mysqli_num_rows($sql);
                                             echo $totalEntries; 
-                                            ?> Entries
+                                            ?> Validation
                                         </th>
                                     </tr>
                                 </tfoot>
